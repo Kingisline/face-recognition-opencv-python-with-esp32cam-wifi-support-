@@ -10,7 +10,7 @@ firebase_admin.initialize_app(cred, {
 ref = db.reference('Students')
 
 data = {
-    "963852":
+    "123456":
         {
             "name": "Elon Musk",
             "major": "Robotics",
@@ -20,7 +20,7 @@ data = {
             "year": 4,
             "last_attendance_time": "2024-08-31 00:20:48"
         },
-    "125135":
+    "654321":
         {
             "name": "Usain bolt",
             "major": "Athelete",
@@ -30,7 +30,7 @@ data = {
             "year": 1,
             "last_attendance_time": "2024-08-31 00:20:48"
         },
-    "123654":
+    "638342":
         {
             "name": "Sathya",
             "major": "Traveller",

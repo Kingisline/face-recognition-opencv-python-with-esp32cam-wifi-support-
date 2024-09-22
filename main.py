@@ -1,3 +1,4 @@
+from io import BytesIO
 import os
 import pickle
 import numpy as np
@@ -10,6 +11,13 @@ from firebase_admin import db
 from firebase_admin import storage
 import numpy as np
 from datetime import datetime
+from sound import play_sound
+import urllib.request
+from PIL import Image
+
+
+# esp32cam module ip address
+url='http://192.168.31.138/cam-hi.jpg'
 
 cred = credentials.Certificate("serviceKey.json")
 firebase_admin.initialize_app(cred, {
@@ -19,9 +27,9 @@ firebase_admin.initialize_app(cred, {
 
 bucket = storage.bucket()
 
-cap = cv2.VideoCapture(0)
-cap.set(3, 640)
-cap.set(4, 480)
+# cap = cv2.VideoCapture(0)
+# cap.set(3, 640)
+# cap.set(4, 480)
 
 imgBackground = cv2.imread('Resources/background.png')
 
@@ -48,7 +56,22 @@ id = -1
 imgStudent = []
 
 while True:
-    success, img = cap.read()
+    # success, img = cap.read()
+
+    # for esp32cam module
+    # Fetch the image from ESP32-CAM
+    # print(f"Fetching image from {url}...")
+    response = urllib.request.urlopen(url)
+    img_data = response.read()
+    # Convert the byte data to a PIL Image
+    imgIO = Image.open(BytesIO(img_data))
+    # print("Image fetched successfully!")
+    # Convert the PIL Image to a NumPy array for OpenCV
+    img_np = np.array(imgIO)
+    # Convert the image from RGB to BGR (OpenCV format)
+    img_cv2 = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+    img = cv2.resize(img_cv2, (640, 480))
+
 
     imgS = cv2.resize(img, (0, 0), None, 0.25, 0.25)
     imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
@@ -108,6 +131,10 @@ while True:
                     modeType = 3
                     counter = 0
                     imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
+                    if __name__ == "__main__":
+                        play_sound('audio/Victor.mp3')
+
+        
 
             if modeType != 3:
 
